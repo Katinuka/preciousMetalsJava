@@ -1,9 +1,9 @@
-package preciousMetals.controller;
+package com.katinuka.preciousMetals.controller;
 
+import com.katinuka.preciousMetals.service.MetalPriceService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import preciousMetals.service.MetalPriceService;
 
 import java.util.Map;
 

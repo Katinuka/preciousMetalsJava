@@ -1,35 +1,32 @@
-package preciousMetals.controller;
+package com.katinuka.preciousMetals.controller;
 
+import com.katinuka.preciousMetals.model.Currency;
+import com.katinuka.preciousMetals.model.User;
+import com.katinuka.preciousMetals.service.MetalPriceService;
+import com.katinuka.preciousMetals.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import preciousMetals.model.Currency;
-import preciousMetals.model.User;
-import preciousMetals.service.MetalPriceService;
-import preciousMetals.service.UserService;
 
 import java.util.Map;
 
 @Controller
-public class CombinedController {
+public class HomeController {
 
-    private final UserService userService;       // To fetch user data
-    private final MetalPriceService metalPriceService;  // To fetch metal prices
+    private final UserService userService;
+    private final MetalPriceService metalPriceService;
 
-    public CombinedController(UserService userService, MetalPriceService metalPriceService) {
+    public HomeController(UserService userService, MetalPriceService metalPriceService) {
         this.userService = userService;
         this.metalPriceService = metalPriceService;
     }
 
-    // Combined endpoint for user data and metal prices
-    @GetMapping("/user/metal-prices")
+    @GetMapping("/home")
     public String getUserAndMetalPrices(Model model) {
         User user = userService.getCurrentUser();
 
@@ -41,14 +38,14 @@ public class CombinedController {
         model.addAttribute("prices", prices);
 
         // Return the Thymeleaf template name
-        return "user_metal_prices";  // This resolves to 'user_metal_prices.html'
+        return "home_page";  // This resolves to 'home_page.html'
     }
 
-    @PostMapping("/user/buy-metal")
+    @PostMapping("/buy-metal")
     @ResponseBody
     public ResponseEntity<?> buyMetal(@RequestBody Map<String, String> purchaseData) {
         try {
-            var metal = Currency.valueOf(purchaseData.get("metal").toUpperCase());
+            var metal = Currency.valueOf(purchaseData.get("metal"));
             var ounces = Double.parseDouble(purchaseData.get("ounces"));
             var pricePerOunce = Double.parseDouble(purchaseData.get("pricePerOunce"));
             var user = userService.getCurrentUser();
@@ -66,11 +63,11 @@ public class CombinedController {
         }
     }
 
-    @PostMapping("/user/sell-metal")
+    @PostMapping("/sell-metal")
     @ResponseBody
     public ResponseEntity<?> sellMetal(@RequestBody Map<String, String> saleData) {
         try {
-            var metal = Currency.valueOf(saleData.get("metal").toUpperCase());
+            var metal = Currency.valueOf(saleData.get("metal"));
             var ounces = Double.parseDouble(saleData.get("ounces"));
             var pricePerOunce = Double.parseDouble(saleData.get("pricePerOunce"));
             var user = userService.getCurrentUser();
@@ -87,5 +84,4 @@ public class CombinedController {
             ));
         }
     }
-
 }
