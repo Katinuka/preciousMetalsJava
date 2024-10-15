@@ -1,5 +1,7 @@
 package com.katinuka.preciousMetals.service;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -19,11 +21,16 @@ public class MetalPriceService {
 
     // Method to fetch metal prices from the Python API
     public Map<String, Double> getMetalPrices() {
-        String url = "http://localhost:5000/api/metals/prices";  // API endpoint
+        String url = "http://localhost:5000/api/metals/prices";
 
         // Make a GET request to the Flask API
         try {
-            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+            ResponseEntity<Map<String, Double>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<>() {}
+            );
             return response.getBody();
         } catch (RestClientException ex) {
             return Collections.emptyMap();

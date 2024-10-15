@@ -26,7 +26,6 @@ public class User {
     private String password;
     private String roles;
 
-    // user balance
     @Convert(converter = MapToStringConverter.class)
     private Map<Currency, Double> balance;
 
